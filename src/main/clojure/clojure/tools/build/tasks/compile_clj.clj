@@ -94,12 +94,14 @@
 
         ;; java-command will run in context of *project-dir* - basis, classpaths, etc
         ;; should all be relative to that (or absolute like working-compile-dir)
-        process-args (process/java-command (merge
-                                            (select-keys params [:java-cmd :java-opts :use-cp-file])
-                                            {:cp [(.getPath working-compile-dir) class-dir]
-                                             :basis basis
-                                             :main 'clojure.main
-                                             :main-args [(.getCanonicalPath compile-script)]}))
+        jcmd (merge (select-keys params [:java-cmd :java-opts :use-cp-file])
+                    {:cp [(.getPath working-compile-dir) class-dir]
+                     :basis basis
+                     :main 'clojure.main
+                     :main-args [(.getCanonicalPath compile-script)]})
+        _ (prn :jcmd jcmd)
+        process-args (process/java-command jcmd)
+        _ (prn :process-args process-args)
         _ (spit (jio/file working-dir "compile.args") (str/join " " (:command-args process-args)))
         proc (process/process process-args)
         exit (:exit proc)]
