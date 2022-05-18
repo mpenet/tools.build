@@ -34,7 +34,7 @@
                           distinct (remove #(= % 'clojure.core)))
         requires (map (fn [n] `(require '~n)) binding-nses)
         do-compile `(with-bindings ~compile-bindings
-                      ~@(map (fn [n] `(~'compile '~n)) nses)
+                      ~@(map (fn [n] `(do (println "Compiling " '~n)  (~'compile '~n))) nses)
                       (System/exit 0))
         script (->> (conj (vec requires) do-compile)
                     (map #(with-out-str (pprint/pprint %)))
