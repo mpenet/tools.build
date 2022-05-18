@@ -39,6 +39,7 @@
         script (->> (conj (vec requires) do-compile)
                     (map #(with-out-str (pprint/pprint %)))
                     (str/join (System/lineSeparator)))]
+    (prn script)
     (spit script-file script)))
 
 (defn- ns->path
