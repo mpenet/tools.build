@@ -103,7 +103,9 @@
         process-args (process/java-command jcmd)
         _ (prn :process-args process-args)
         _ (spit (jio/file working-dir "compile.args") (str/join " " (:command-args process-args)))
-        proc (process/process process-args)
+        proc (process/process (assoc process-args
+                                     :out :capture
+                                     :err :capture))
         exit (:exit proc)]
     (if (zero? exit)
       (do
